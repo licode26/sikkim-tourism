@@ -41,32 +41,56 @@
 
   <main>
     <div class="hero-content">
-      <h1>Discover Sikkim's <br><span class="highlight">Digital Future</span></h1>
-      <p class="subtitle">Experience the mystical beauty of Sikkim through cutting-edge technology. Use our AI to generate a video of your dream tour.</p>
+      <h1>Discover Sikkim's <br><span class="highlight">Cultural Soul</span></h1>
+      <p class="subtitle">Immerse yourself in the rich heritage and breathtaking landscapes of the Himalayas.</p>
       
-      <div class="generator-form">
-        <textarea id="prompt-input" placeholder="Describe your ideal journey, e.g., 'A serene sunrise over Kanchenjunga'"></textarea>
-        <div class="form-actions">
-            <label for="file-input" class="upload-btn">Upload Image</label>
-            <input id="file-input" type="file" accept="image/*" />
-            <button id="generate-button">Generate Video Tour</button>
-        </div>
+      <div class="quote-container">
+          <blockquote id="daily-quote-text">Loading quote...</blockquote>
+          <cite id="daily-quote-author"></cite>
       </div>
 
-      <div class="output-container">
-        <img alt="Condition image" id="img-preview" />
-        <video id="video" autoplay loop controls></video>
-        <p id="status">Ready.</p>
+      <div class="stats-container">
+          <div class="stat-item">
+              <span id="monasteries-count" class="stat-number">0</span>
+              <span class="stat-label">Monasteries</span>
+          </div>
+          <div class="stat-item">
+              <span id="hilltops-count" class="stat-number">0</span>
+              <span class="stat-label">Scenic Hill Tops</span>
+          </div>
+          <div class="stat-item">
+              <span id="archives-count" class="stat-number">0</span>
+              <span class="stat-label">Digital Archives</span>
+          </div>
       </div>
     </div>
   </main>
 
   <section class="features">
     <div class="feature-grid">
-      <!-- Card 1: AI Audio Guide -->
+      <!-- Card 1: Virtual Tours -->
       <div class="feature-card">
         <div class="card-image-container">
-          <img src="https://images.unsplash.com/photo-1549470947-3a6a42b78580?q=80&w=1974&auto=format&fit=crop" alt="A person holding a phone with an audio guide app in a scenic mountain valley.">
+          <img 
+            alt="A panoramic view of a mountain range, representing a virtual tour."
+            data-fallback-src="https://images.unsplash.com/photo-1593766981329-373b5f00a151?q=80&w=2070&auto=format&fit=crop"
+          >
+          <div class="card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Virtual Tours</h3>
+          <p>Immersive 360-degree tours of monasteries, landscapes, and cultural sites.</p>
+        </div>
+      </div>
+      <!-- Card 2: AI Audio Guide -->
+      <div class="feature-card">
+        <div class="card-image-container">
+          <img 
+            alt="A person holding a phone with an audio guide app in a scenic mountain valley."
+            data-fallback-src="https://images.unsplash.com/photo-1549470947-3a6a42b78580?q=80&w=1974&auto=format&fit=crop"
+          >
           <div class="card-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2z"></path><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"></path></svg>
           </div>
@@ -76,10 +100,13 @@
           <p>Smart offline-capable audio guides with personalized recommendations</p>
         </div>
       </div>
-      <!-- Card 2: Digital Archives -->
+      <!-- Card 3: Digital Archives -->
       <div class="feature-card">
         <div class="card-image-container">
-          <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop" alt="An old book open on a table, sunlight streaming in.">
+          <img 
+            alt="An old book open on a table, sunlight streaming in."
+            data-fallback-src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=2070&auto=format&fit=crop"
+          >
           <div class="card-icon">
              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </div>
@@ -89,10 +116,13 @@
           <p>AI-powered search through historical manuscripts and cultural artifacts</p>
         </div>
       </div>
-      <!-- Card 3: Local Services Hub -->
+      <!-- Card 4: Local Services Hub -->
       <div class="feature-card">
         <div class="card-image-container">
-          <img src="https://images.unsplash.com/photo-1583845112123-b143419a4d85?q=80&w=2070&auto=format&fit=crop" alt="A modern, comfortable hotel lounge with a view of mountains.">
+          <img 
+            alt="A modern, comfortable hotel lounge with a view of mountains."
+            data-fallback-src="https://images.unsplash.com/photo-1583845112123-b143419a4d85?q=80&w=2070&auto=format&fit=crop"
+          >
           <div class="card-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           </div>
@@ -105,22 +135,56 @@
     </div>
   </section>
 
-  <div class="stats">
-      <p>Active Monasteries: <span class="highlight">108</span></p>
-      <p>Cultural Events: <span class="highlight">24</span></p>
-      <p>Travel Routes: <span class="highlight">15</span></p>
-      <p>Digital Archives: <span class="highlight">1,247</span></p>
-  </div>
+  <section class="cta-section">
+    <h2>Find Anything About Sikkim</h2>
+    <p>AI-powered search across monasteries, attractions, events, and cultural heritage</p>
+    <button class="search-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      Start Searching
+    </button>
+  </section>
 
-  <div id="error-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div id="error-message-container"></div>
-      <div class="modal-actions">
-        <button id="modal-add-key-button">Add API Key</button>
-        <button id="modal-close-button">Close</button>
+  <footer>
+    <div class="footer-content">
+      <div class="footer-column about">
+        <div class="logo">
+          <div class="logo-icon">S</div>
+          <span>Sikkim<br>Digital</span>
+        </div>
+        <p>Revolutionizing tourism in Sikkim through cutting-edge technology, sustainable practices, and authentic cultural experiences.</p>
+      </div>
+      <div class="footer-column links">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#">Virtual Tours</a></li>
+          <li><a href="#">Interactive Map</a></li>
+          <li><a href="#">Cultural Events</a></li>
+          <li><a href="#">Audio Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-column links">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Digital Archives</a></li>
+          <li><a href="#">Local Services</a></li>
+          <li><a href="#">Search</a></li>
+          <li><a href="#">Travel Guidelines</a></li>
+        </ul>
+      </div>
+      <div class="footer-column links">
+        <h3>Connect</h3>
+        <ul>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Feedback</a></li>
+          <li><a href="#">Partnership</a></li>
+        </ul>
       </div>
     </div>
-  </div>
+    <div class="footer-copyright">
+      <p>Copyright &copy; @team neur-augmenters</p>
+    </div>
+  </footer>
 
   <script type="module" src="index.tsx"></script>
 </body>

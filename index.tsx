@@ -4,163 +4,102 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {GoogleGenAI} from '@google/genai';
 
-// Correct initialization according to guidelines
-const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+// --- QUOTES DATA ---
+const quotes = [
+  { 
+    text: "Sikkim is a land of majestic mountains, serene monasteries, and vibrant culture, a true jewel of the Himalayas.",
+    author: "A Traveler's Journal" 
+  },
+  { 
+    text: "To travel in Sikkim is to be humbled by nature's grandeur and touched by the warmth of its people.",
+    author: "Himalayan Echoes" 
+  },
+  {
+    text: "The air in Sikkim is so pure, it feels like you're breathing in peace itself.",
+    author: "Anonymous"
+  },
+  {
+    text: "Every corner of Sikkim holds a story, whispered by the prayer flags and ancient stones.",
+    author: "Local Proverb"
+  },
+  {
+    text: "Sikkim is not just a destination, it's an experience that stays with you long after you've left.",
+    author: "Explorer's Diary"
+  },
+];
 
-async function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// --- COUNTER DATA ---
+const stats = {
+  monasteries: 200,
+  hilltops: 150,
+  archives: 5000,
+};
 
-function blobToBase64(blob: Blob) {
-  return new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = reader.result as string;
-      resolve(url.split(',')[1]);
-    };
-    reader.readAsDataURL(blob);
-  });
-}
+/**
+ * Sets a daily quote on the page.
+ */
+function setDailyQuote() {
+  const quoteTextEl = document.getElementById('daily-quote-text');
+  const quoteAuthorEl = document.getElementById('daily-quote-author');
 
-async function generateContent(prompt: string, imageBytes: string | null) {
-  // Configuration for the video generation
-  const config: any = {
-    model: 'veo-2.0-generate-001', // Correct model name
-    prompt,
-    config: {
-      numberOfVideos: 1,
-    },
-  };
-
-  if (imageBytes) {
-    config.image = {
-      imageBytes,
-      mimeType: 'image/png', // Assuming png, could be dynamic
-    };
-  }
-
-  let operation = await ai.models.generateVideos(config);
-
-  const statusEl = document.querySelector('#status') as HTMLDivElement;
-  let dots = 1;
-  while (!operation.done) {
-    const waitingMessage = `Generating, please wait${'.'.repeat(dots)}`;
-    console.log(waitingMessage);
-    statusEl.innerText = waitingMessage;
-    dots = (dots % 3) + 1;
-    await delay(10000); // Poll for video operation status
-    operation = await ai.operations.getVideosOperation({operation});
-  }
-
-  const videos = operation.response?.generatedVideos;
-  if (videos === undefined || videos.length === 0) {
-    throw new Error('No videos generated');
-  }
-
-  videos.forEach(async (v, i) => {
-    // Appending API key to the URI is required
-    const url = `${v.video.uri}&key=${process.env.API_KEY}`;
-    const res = await fetch(url);
-    const blob = await res.blob();
-    const objectURL = URL.createObjectURL(blob);
+  if (quoteTextEl && quoteAuthorEl) {
+    // Get day of the year to ensure the quote changes daily
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = (now.getTime() - start.getTime()) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    // Instead of auto-download, show in video player
-    const video = document.querySelector('#video') as HTMLVideoElement;
-    video.src = objectURL;
-    video.style.display = 'block';
-    console.log(`Video ${i} is ready to play.`);
-  });
-}
+    const quoteIndex = dayOfYear % quotes.length;
+    const selectedQuote = quotes[quoteIndex];
 
-// Get references to new DOM elements
-const uploadInput = document.querySelector('#file-input') as HTMLInputElement;
-const promptEl = document.querySelector('#prompt-input') as HTMLTextAreaElement;
-const generateButton = document.querySelector('#generate-button') as HTMLButtonElement;
-const statusEl = document.querySelector('#status') as HTMLDivElement;
-const video = document.querySelector('#video') as HTMLVideoElement;
-const imgPreview = document.querySelector('#img-preview') as HTMLImageElement;
-const errorModal = document.querySelector('#error-modal') as HTMLDivElement;
-const errorMessageContainer = document.querySelector('#error-message-container') as HTMLDivElement;
-const modalAddKeyButton = document.querySelector('#modal-add-key-button') as HTMLButtonElement;
-const modalCloseButton = document.querySelector('#modal-close-button') as HTMLButtonElement;
-
-let base64data: string | null = null;
-let prompt = '';
-
-// Event Listeners
-uploadInput.addEventListener('change', async (e) => {
-  const file = (e.target as HTMLInputElement).files[0];
-  if (file) {
-    base64data = await blobToBase64(file);
-    // Show image preview
-    imgPreview.src = URL.createObjectURL(file);
-    imgPreview.style.display = 'block';
-  } else {
-    base64data = null;
-    imgPreview.style.display = 'none';
+    quoteTextEl.textContent = `"${selectedQuote.text}"`;
+    quoteAuthorEl.textContent = `— ${selectedQuote.author}`;
   }
-});
-
-promptEl.addEventListener('input', () => {
-  prompt = promptEl.value;
-});
-
-generateButton.addEventListener('click', () => {
-  if (prompt.trim() === '') {
-    alert('Please enter a prompt to generate a video.');
-    return;
-  }
-  generate();
-});
-
-modalCloseButton.addEventListener('click', () => {
-  errorModal.style.display = 'none';
-});
-
-modalAddKeyButton.addEventListener('click', async () => {
-  // API key management must be handled externally.
-  alert('Please ensure your API key is configured correctly in your environment.');
-  errorModal.style.display = 'none';
-});
-
-// Helper Functions
-function showErrorModal(messages: string[]) {
-  errorMessageContainer.innerHTML = '';
-  messages.forEach((msg) => {
-    const p = document.createElement('p');
-    p.textContent = msg;
-    errorMessageContainer.appendChild(p);
-  });
-  errorModal.style.display = 'flex';
 }
 
-function setUIState(isGenerating: boolean) {
-    generateButton.disabled = isGenerating;
-    uploadInput.disabled = isGenerating;
-    promptEl.disabled = isGenerating;
-    generateButton.innerText = isGenerating ? 'Generating...' : 'Generate Video Tour';
-}
+/**
+ * Animates a number from 0 to a target value.
+ * @param el The DOM element to update.
+ * @param target The final number.
+ * @param duration The animation duration in ms.
+ */
+function animateCount(el: HTMLElement, target: number, duration: number = 2000) {
+  let start = 0;
+  const end = target;
+  let startTime: number | null = null;
 
-// Main Generate Function
-async function generate() {
-  statusEl.innerText = 'Starting generation...';
-  video.style.display = 'none';
-  setUIState(true);
+  function animation(currentTime: number) {
+    if (startTime === null) startTime = currentTime;
+    const progress = Math.min((currentTime - startTime) / duration, 1);
+    
+    const currentCount = Math.floor(progress * (end - start) + start);
+    el.textContent = currentCount.toLocaleString() + (target >= 1000 ? '+' : '');
 
-  try {
-    await generateContent(prompt, base64data);
-    statusEl.innerText = 'Done. Your video is ready.';
-  } catch (e) {
-    console.error('Video generation failed:', e);
-    // Generic error message
-    showErrorModal([
-        'Video generation failed.',
-        'This may be due to an invalid API key or a problem with the service. Please check your setup and try again.'
-    ]);
-    statusEl.innerText = 'Error generating video.';
+    if (progress < 1) {
+      requestAnimationFrame(animation);
+    }
   }
 
-  setUIState(false);
+  requestAnimationFrame(animation);
 }
+
+/**
+ * Initializes all the dynamic content on the page.
+ */
+function initializePage() {
+  setDailyQuote();
+
+  const monasteriesEl = document.getElementById('monasteries-count');
+  const hilltopsEl = document.getElementById('hilltops-count');
+  const archivesEl = document.getElementById('archives-count');
+
+  if (monasteriesEl && hilltopsEl && archivesEl) {
+    animateCount(monasteriesEl, stats.monasteries);
+    animateCount(hilltopsEl, stats.hilltops);
+    animateCount(archivesEl, stats.archives);
+  }
+}
+
+// Run initialization logic after the DOM is fully loaded.
+document.addEventListener('DOMContentLoaded', initializePage);
